@@ -114,6 +114,10 @@ var tetris = {
             switch (e.keyCode) { //start and pause
                 case 80: //p or P
                 case 112: {
+                    if (tetris.isInPauseState()) {
+                        break;
+                    }
+
                     tetris.pause();
                     break;
                 }
@@ -469,6 +473,10 @@ var tetris = {
         $('#gameover')[0].style.display = 'block';
         $('#start').hide();
         $('#restart').show();
+    },
+    isInPauseState: function() {
+        return tetris.state === gameStates.PAUSED ||
+                tetris.state === gameStates.GAME_OVER;
     }
 }
 $(document).ready(function(){
