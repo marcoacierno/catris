@@ -6,7 +6,7 @@ var nextCanvas;
 var nextContext;
 var size = 30;
 var ticker = null;
-var gameStates = {OFF: 0, PAUSED: 1, ON: 2};
+var gameStates = {OFF: 0, PAUSED: 1, ON: 2, GAME_OVER: 3};
 var gridcolor = '#eeeeee';
 var shapes = {
     i: [[['0/i_01',0,0,0],['0/i_02',0,0,0],['0/i_03',0,0,0],['0/i_04',0,0,0]],
@@ -119,6 +119,11 @@ var tetris = {
                 }
                 case 83: //s or S
                 case 115: {
+                    if (tetris.state === gameStates.GAME_OVER) {
+                        tetris.reset();
+                        break;
+                    }
+
                     tetris.start();
                     break;
                 }
@@ -385,11 +390,7 @@ var tetris = {
             current.next = shapes[s];
         }
         else {
-            tetris.pause();
-            $('#blocker')[0].style.display = 'none';
-            $('#gameover')[0].style.display = 'block';
-            $('#start').hide();
-            $('#restart').show();
+            tetris.gameOver();
         }
     },
     update: function (r, x, y, cl) {
@@ -459,8 +460,16 @@ var tetris = {
         tetris.init();
         tetris.updateGame();
         tetris.start();
-        
+
     },
+    gameOver: function() {
+        tetris.pause();
+        tetris.state = gameStates.GAME_OVER;
+        $('#blocker')[0].style.display = 'none';
+        $('#gameover')[0].style.display = 'block';
+        $('#start').hide();
+        $('#restart').show();
+    }
 }
 $(document).ready(function(){
     tetris.cacheMeUp();
